@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -19,7 +18,7 @@ public class FacultyController {
     }
 
     @GetMapping("/{id}")
-    public Faculty getById(@PathVariable long id) {
+    public Optional<Faculty> getById(@PathVariable long id) {
         return facultyService.read(id);
     }
 
@@ -35,46 +34,15 @@ public class FacultyController {
     }
 
     @DeleteMapping("/{id}")
-    public Faculty delete(@PathVariable long id) {
-        return facultyService.delete(id);
+    public ResponseEntity delete(@PathVariable long id) {
+        facultyService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 
     @GetMapping("/filter")
-    public Map<Long, Faculty> filterByColor(@RequestParam("color") String color) {
+    public Collection<Faculty> filterByColor(@RequestParam("color") String color) {
         return facultyService.filterByColor(color);
     }
-
-
-
-//    @GetMapping("{id}")
-//    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
-//        Faculty faculty = facultyService.read(id);
-//        if (faculty == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(faculty);
-//    }
-
-
-//    @GetMapping
-//    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
-//        if (color != null && !color.isBlank()) {
-//            return ResponseEntity.ok(facultyService.findByColor(color));
-//        }
-//        return ResponseEntity.ok(Collections.emptyList());
-//    }
-//
-//    // Service
-//    public Collection<Faculty>
-//    findByColor(String color) {
-//        ArrayList<Faculty> result = new ArrayList<>();
-//        for (Faculty faculty : faculties.values()) {
-//            if (Objects.equals(faculty.getColor(), color)) {
-//                result.add(faculty);
-//            }
-//        }
-//        return result;
-//    }
 
 }

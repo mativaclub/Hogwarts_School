@@ -1,15 +1,11 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/student")
@@ -22,7 +18,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Student getById(@PathVariable long id) {
+    public Optional<Student> getById(@PathVariable long id) {
         return studentService.read(id);
     }
 
@@ -38,34 +34,19 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public Student delete(@PathVariable long id) {
-        return studentService.delete(id);
+    public ResponseEntity delete(@PathVariable long id) {
+        studentService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 
     @GetMapping("/filter")
-    public Map<Long, Student> filterByAge(@RequestParam("age") int age) {
-        return studentService.filterByAge(age);
+    public ResponseEntity<Collection<Student>> filterByAge(@RequestParam("age") int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.filterByAge(age));
+        }
+        return ResponseEntity.badRequest().build();
     }
 
+    }
 
-
-//    @GetMapping
-//    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-//        if (age > 0) {
-//            return ResponseEntity.ok(studentService.findByAge(age));
-//        }
-//        return ResponseEntity.ok(Collections.emptyList());
-//    }
-//
-//
-//    public Collection<Student> findByAge(int age) {
-//        ArrayList<Student> result = new ArrayList<>();
-//        for (Student student : students.values()) {
-//            if (student.getAge() == age) {
-//                result.add(student);
-//            }
-//        }
-//        return result;
-//    }
-}
