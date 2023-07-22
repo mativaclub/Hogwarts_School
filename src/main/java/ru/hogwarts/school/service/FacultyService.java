@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.*;
@@ -28,7 +29,7 @@ public class FacultyService {
     }
 
     public void delete(long deleteById) {
-       facultyRepository.deleteById(deleteById);
+        facultyRepository.deleteById(deleteById);
     }
 
 
@@ -42,8 +43,25 @@ public class FacultyService {
         return allFaculty.stream()
                 .filter(el -> el.getColor().equals(color))
                 .collect(Collectors.toList());
-        }
+    }
+
+    public Collection<Faculty> findByNameIgnoreCase(String name) {
+        return facultyRepository.findByNameIgnoreCase(name);
+    }
+
+    public Collection<Faculty> findByColorIgnoreCase(String color) {
+        return facultyRepository.findByColorIgnoreCase(color);
+    }
+
+    public Collection<Faculty> getFacultyOfStudent(long studentId) {
+        return facultyRepository.findAll().stream()
+                .filter(faculty -> faculty.getStudents() != null &&
+                        faculty.getId().equals(studentId))
+                .collect(Collectors.toList());
+
+    }
 }
+
 
 
 

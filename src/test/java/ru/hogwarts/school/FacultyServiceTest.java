@@ -32,6 +32,13 @@ public class FacultyServiceTest {
         when(facultyRepository.save(faculty)).thenReturn(faculty);
         assertEquals(facultyService.create(faculty), faculty);
     }
+//    @Test
+//    public void shouldCreateFaculty1() {
+//        Faculty expectedFaculty = new Faculty(1L, "Anna", "Red");
+//        Faculty actualFaculty = new Faculty(1L, "Anna", "Red");
+//        when(facultyRepository.save(expectedFaculty)).thenReturn(actualFaculty);
+//        assertEquals(facultyService.create(expectedFaculty), actualFaculty);
+//    }
 
     @Test
     public void shouldFindStudent() {

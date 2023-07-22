@@ -1,8 +1,12 @@
 package ru.hogwarts.school.model;
 
+import org.springframework.web.servlet.support.JstlUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +17,9 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
+
+    @OneToMany(mappedBy = "faculty")
+    private Collection<Student> students;
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
@@ -48,6 +55,13 @@ public class Faculty {
         this.color = color;
     }
 
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
+    }
 
     @Override
     public boolean equals(Object o) {

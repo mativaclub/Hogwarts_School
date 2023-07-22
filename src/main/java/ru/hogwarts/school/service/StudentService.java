@@ -43,9 +43,21 @@ public class StudentService {
         return allStudents.stream()
                 .filter(el -> el.getAge() == age)
                 .collect(Collectors.toList());
-
     }
 
+    public Collection<Student> findByAgeBetween(int fromAge, int toAge) {
+//        return studentRepository.findAll().stream()
+//                .filter(el -> el.getAge() >= fromAge && el.getAge() <= toAge)
+//                .collect(Collectors.toList());
+        return studentRepository.findByAgeBetween(fromAge, toAge);
+    }
+
+    public Collection<Student> filterStudentsByFaculty(long facultyId) {
+        return studentRepository.findAll().stream()
+                .filter(student -> student.getFaculty() != null &&
+                        student.getFaculty().getId().equals(facultyId))
+                .collect(Collectors.toList());
+    }
 
 
 }
