@@ -41,10 +41,10 @@ public class FacultyController {
     }
 
 
-    @GetMapping("/filter")
-    public Collection<Faculty> filterByColor(@RequestParam("color") String color) {
-        return facultyService.filterByColor(color);
-    }
+//    @GetMapping("/filter")
+//    public Collection<Faculty> filterByColor(@RequestParam("color") String color) {
+//        return facultyService.filterByColor(color);
+//    }
 
     @GetMapping("/filter/name")
     public ResponseEntity<Collection<Faculty>> findByNameIgnoreCase(
@@ -63,9 +63,17 @@ public class FacultyController {
         }
         return ResponseEntity.badRequest().build();
     }
+
     @GetMapping("/getFacultyOfStudent")
-    public ResponseEntity<Collection<Faculty>> getFacultyOfStudent(@RequestParam("studentId") long studentId) {
+    public ResponseEntity<Faculty> getFacultyOfStudent(@RequestParam("studentId") long studentId) {
         return ResponseEntity.ok(facultyService.getFacultyOfStudent(studentId));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Collection<Faculty>> findByColorOrNameIgnoreCase(
+            @RequestParam("color") String color,
+            @RequestParam("name") String name) {
+        return ResponseEntity.ok(facultyService.findByColorOrNameIgnoreCase(color, name));
     }
 
 

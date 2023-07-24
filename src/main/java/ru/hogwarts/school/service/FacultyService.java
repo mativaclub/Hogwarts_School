@@ -38,13 +38,6 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public Collection<Faculty> filterByColor(String color) {
-        List<Faculty> allFaculty = facultyRepository.findAll();
-        return allFaculty.stream()
-                .filter(el -> el.getColor().equals(color))
-                .collect(Collectors.toList());
-    }
-
     public Collection<Faculty> findByNameIgnoreCase(String name) {
         return facultyRepository.findByNameIgnoreCase(name);
     }
@@ -53,19 +46,27 @@ public class FacultyService {
         return facultyRepository.findByColorIgnoreCase(color);
     }
 
-    public Collection<Faculty> getFacultyOfStudent(long studentId) {
-        return facultyRepository.findAll().stream()
-                .filter(faculty -> faculty.getStudents() != null &&
-                        faculty.getId().equals(studentId))
-                .collect(Collectors.toList());
+    public Faculty getFacultyOfStudent(long studentId) {
+        return facultyRepository.findByStudents_id(studentId);
 
     }
+
+    public Collection<Faculty> findByColorOrNameIgnoreCase(String color, String name) {
+        return facultyRepository.findByColorOrNameIgnoreCase(color, name);
+    }
+
 }
 
 
 
 
 
+//    public Collection<Faculty> filterByColor(String color) {
+//        List<Faculty> allFaculty = facultyRepository.findAll();
+//        return allFaculty.stream()
+//                .filter(el -> el.getColor().equals(color))
+//                .collect(Collectors.toList());
+//    }
 
 
 

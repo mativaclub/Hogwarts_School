@@ -59,8 +59,9 @@ public class StudentController {
         return ResponseEntity.badRequest().build();
     }
     @GetMapping("/filterByFaculty")
-    public ResponseEntity<Collection<Student>> filterStudentsByFaculty(@RequestParam("facultyId") long facultyId) {
-        return ResponseEntity.ok(studentService.filterStudentsByFaculty(facultyId));
+    public ResponseEntity<Collection<Student>> filterStudentsByFaculty(
+            @RequestParam("facultyId") long facultyId) {
+        return ResponseEntity.ok(studentService.findStudentsByFaculty_Id(facultyId));
     }
 
 

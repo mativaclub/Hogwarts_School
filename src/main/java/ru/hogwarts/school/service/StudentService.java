@@ -52,11 +52,13 @@ public class StudentService {
         return studentRepository.findByAgeBetween(fromAge, toAge);
     }
 
-    public Collection<Student> filterStudentsByFaculty(long facultyId) {
-        return studentRepository.findAll().stream()
-                .filter(student -> student.getFaculty() != null &&
-                        student.getFaculty().getId().equals(facultyId))
-                .collect(Collectors.toList());
+    public Collection<Student> findStudentsByFaculty_Id(long facultyId) {
+        return studentRepository.findStudentsByFaculty_Id(facultyId);
+
+//        return studentRepository.findAll().stream()
+//                .filter(student -> student.getFaculty() != null &&
+//                        student.getFaculty().getId().equals(facultyId))
+//                .collect(Collectors.toList());
     }
 
 
