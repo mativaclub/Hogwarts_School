@@ -1,5 +1,7 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.jfr.Enabled;
 import ru.hogwarts.school.repository.FacultyRepository;
 
@@ -14,10 +16,13 @@ public class Student {
     private Long id;
     private String name;
     private int age;
-
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "faculty_id")
+//    @JsonIgnore
     private Faculty faculty;
+
+//    private Avatar avatar;
     public Student(Long id, String name, int age) {
         this.id = id;
         this.name = name;
@@ -66,21 +71,16 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return age == student.age && Objects.equals(id, student.id) && Objects.equals(name, student.name);
+        return age == student.age && Objects.equals(id, student.id) && Objects.equals(name, student.name) && Objects.equals(faculty, student.faculty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age);
+        return Objects.hash(id, name, age, faculty);
     }
-
 
     @Override
     public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                '}';
+        return "id=" + id;
     }
 }

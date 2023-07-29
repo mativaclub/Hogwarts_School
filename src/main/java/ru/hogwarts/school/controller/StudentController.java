@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.*;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     private final StudentService studentService;
+//    private final FacultyService facultyService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+//        this.facultyService = facultyService;
     }
 
     @GetMapping("/{id}")
@@ -25,7 +28,11 @@ public class StudentController {
     }
 
     @PostMapping()
-    public Student create(@RequestBody() Student student) {
+    public Student create(@RequestBody() Student student, @RequestParam(required = false) Long facultyId) {
+//        Optional<Faculty> faculty = facultyService.read(facultyId);
+//        if (faculty.isPresent()) {
+//            student.setFaculty(faculty.get());
+//        }
         return studentService.create(student);
     }
 
