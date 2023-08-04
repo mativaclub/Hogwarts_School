@@ -70,7 +70,7 @@ public class FacultyServiceTest {
         Faculty faculty1 = new Faculty(1L, "Anna", "Red");
         Faculty faculty2 = new Faculty(2L, "Maria", "Green");
         when(facultyRepository.findAll()).thenReturn(List.of(faculty1, faculty2));
-        assertEquals(facultyService.filterByColor(faculty2.getColor()), List.of(faculty2));
+        assertEquals(facultyService.findByColorIgnoreCase(faculty2.getColor()), List.of(faculty2));
     }
 
 

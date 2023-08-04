@@ -24,8 +24,14 @@ public class AvatarController {
     }
     @PostMapping(value = "/{studentId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId,
-                                               @RequestParam MultipartFile avatar) throws IOException {
-        avatarService.uploadAvatar(studentId, avatar);
+                                               @RequestParam MultipartFile avatar) {
+        // MultipartFile - это в спринге интерфейс для загруженных файлов-то есть при загрузке файл попадает в переменную avatar
+        try {
+            avatarService.uploadAvatar(studentId, avatar);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
     //Это эндпоинт, который прослушивает POST-запросы по URL "/{studentId}/avatar".

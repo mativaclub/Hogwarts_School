@@ -15,35 +15,37 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     private final StudentService studentService;
-//    private final FacultyService facultyService;
+    private final FacultyService facultyService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
-//        this.facultyService = facultyService;
+        this.facultyService = facultyService;
     }
 
     @GetMapping("/{id}")
-    public Optional<Student> getById(@PathVariable long id) {
-        return studentService.read(id);
+    public Student getById(@PathVariable long id) {
+        return studentService.read(id).orElse(null);
     }
 
     @PostMapping()
-    public Student create(@RequestBody() Student student, @RequestParam(required = false) Long facultyId) {
-//        Optional<Faculty> faculty = facultyService.read(facultyId);
-//        if (faculty.isPresent()) {
-//            student.setFaculty(faculty.get());
-//        }
-        return studentService.create(student);
+    public Student create(@RequestBody() Student student, @RequestParam(required = false) Long facultyId){
+        Optional<Faculty> faculty = facultyService.read(facultyId);
+        if (faculty.isPresent()) {
+            student.setFaculty(faculty.get());
+        }
+        Student result = studentService.create(student);
+        faculty.ifPresent(result::setFaculty);
+        return result;
     }
 
     @PutMapping("/{id}")
-    public Student update(@RequestBody() Student student, @PathVariable long id) {
+    public Student update(@RequestBody() Student student, @PathVariable Long id) {
         student.setId(id);
         return studentService.update(student);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         studentService.delete(id);
         return ResponseEntity.ok().build();
     }
