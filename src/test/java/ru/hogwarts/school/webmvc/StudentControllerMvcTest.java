@@ -90,6 +90,11 @@ public class StudentControllerMvcTest {
                 .andExpect(status().isOk()) //receive
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/student/1") //send
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()); //receive
     }
 
     @Test
