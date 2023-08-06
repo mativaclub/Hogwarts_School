@@ -15,11 +15,8 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     private final StudentService studentService;
-    private final FacultyService facultyService;
-
-    public StudentController(StudentService studentService, FacultyService facultyService) {
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
-        this.facultyService = facultyService;
     }
 
     @GetMapping("/{id}")
@@ -28,14 +25,8 @@ public class StudentController {
     }
 
     @PostMapping()
-    public Student create(@RequestBody() Student student, @RequestParam(required = false) Long facultyId){
-        Optional<Faculty> faculty = facultyService.read(facultyId);
-        if (faculty.isPresent()) {
-            student.setFaculty(faculty.get());
-        }
-        Student result = studentService.create(student);
-        faculty.ifPresent(result::setFaculty);
-        return result;
+    public Student create(@RequestBody() Student student){
+        return studentService.create(student);
     }
 
     @PutMapping("/{id}")
@@ -51,7 +42,7 @@ public class StudentController {
     }
 
 
-    @GetMapping("/filter")
+    @GetMapping("/filterByAge")
     public ResponseEntity<Collection<Student>> filterByAge(@RequestParam("age") int age) {
         if (age > 0) {
             return ResponseEntity.ok(studentService.filterByAge(age));
@@ -67,6 +58,7 @@ public class StudentController {
         }
         return ResponseEntity.badRequest().build();
     }
+
     @GetMapping("/filterByFaculty")
     public ResponseEntity<Collection<Student>> filterStudentsByFaculty(
             @RequestParam("facultyId") long facultyId) {
