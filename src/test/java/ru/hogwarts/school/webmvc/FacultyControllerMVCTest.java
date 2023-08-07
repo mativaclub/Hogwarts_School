@@ -105,7 +105,7 @@ public class FacultyControllerMVCTest {
                 .andExpect(status().isOk()); //receive
 
 //        mockMvc.perform(MockMvcRequestBuilders
-//                        .put("/faculty/filter/" + color) //send
+//                        .get("/faculty/filter/" + color) //send
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk()) //receive
 //                .andExpect(jsonPath("$[0].id").value(id))
