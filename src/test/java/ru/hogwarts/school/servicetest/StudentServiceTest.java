@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
@@ -74,6 +75,26 @@ public class StudentServiceTest {
         Student student2 = new Student(2L, "Maria", 30);
         when(studentRepository.findAll()).thenReturn(List.of(student1, student2));
         assertEquals(studentService.findStudents(), List.of(student1, student2));
+    }
+
+    @Test
+    public void findByAgeBetweenTest() {
+        Student student1 = new Student(1L, "Anna", 25);
+        Student student2 = new Student(2L, "Maria", 30);
+        when(studentRepository.findByAgeBetween(18, 25)).thenReturn(List.of(student1));
+        assertEquals(studentService.findByAgeBetween(18, 25), List.of(student1));
+    }
+
+    @Test
+    public void filterStudentsByFacultyTest() {
+        Student student1 = new Student(1L, "Anna", 25);
+        Student student2 = new Student(2L, "Maria", 30);
+        student1.setFaculty(new Faculty(1L, "Name", "Green"));
+        student2.setFaculty(new Faculty(2L, "Name", "Green"));
+        when(studentRepository.findStudentsByFaculty_Id(1)).thenReturn(List.of(student1));
+        when(studentRepository.findStudentsByFaculty_Id(2)).thenReturn(List.of(student2));
+        assertEquals(studentService.findStudentsByFaculty_Id(1L), List.of(student1));
+        assertEquals(studentService.findStudentsByFaculty_Id(2L), List.of(student2));
     }
 
 }

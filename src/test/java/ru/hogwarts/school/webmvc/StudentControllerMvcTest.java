@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.controller.StudentController;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -20,13 +21,10 @@ import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,7 +72,7 @@ public class StudentControllerMvcTest {
     }
 
     @Test
-    public void getStudent() throws Exception {
+    public void getStudentTest() throws Exception {
         final int age = 1;
         final String name = "Test";
         final Long id = 1L;
@@ -155,12 +153,51 @@ public class StudentControllerMvcTest {
                 new Student(2L, "Test2", 1)
         ));
         when(studentRepository.findAll()).thenReturn(students);
-
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/student/filterByAge?age=1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].age").value(1))
                 .andExpect(jsonPath("$.[0].name").value("Test1"));
+    }
+
+    @Test
+    public void filterByAgeBetweenTest() throws Exception {
+        List<Student> students = new ArrayList<>(List.of(
+                new Student(1L, "Test1", 1),
+                new Student(2L, "Test2", 4),
+                new Student(4L, "Test4", 9),
+                new Student(3L, "Test3", 6)
+        ));
+        List<Student> filterStudents = students.stream()
+                .filter((el) -> el.getAge() >= 1 && el.getAge() <= 6)
+                .toList();
+        when(studentRepository.findByAgeBetween(anyInt(), anyInt())).thenReturn(filterStudents);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/filterBetween?from=1&to=6")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].age").value(1))
+                .andExpect(jsonPath("$.[1].age").value(4))
+                .andExpect(jsonPath("$.[2].age").value(6));
+    }
+
+    @Test
+    public void getStudentByFacultyTest() throws Exception {
+        Faculty faculty1 = new Faculty(1L, "Name1", "Color1");
+        Faculty faculty2 = new Faculty(2L, "Name2", "Color2");
+        Student student1 = new Student(1L, "Test1", 1);
+        Student student2 = new Student(2L, "Test2", 2);
+        student1.setFaculty(faculty1);
+        student2.setFaculty(faculty2);
+        when(studentRepository.findStudentsByFaculty_Id(3)).thenReturn(Collections.emptyList());
+        when(studentRepository.findStudentsByFaculty_Id(2)).thenReturn(List.of(student2));
+        when(studentRepository.findStudentsByFaculty_Id(1)).thenReturn(List.of(student1));
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/filterByFaculty?facultyId=2")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id").value(2));
+        //[0] тут уже student2 становиться нулевым по порядку
     }
 }

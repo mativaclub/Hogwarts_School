@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class StudentController {
 
     private final StudentService studentService;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -25,7 +26,7 @@ public class StudentController {
     }
 
     @PostMapping()
-    public Student create(@RequestBody() Student student){
+    public Student create(@RequestBody() Student student) {
         return studentService.create(student);
     }
 
@@ -65,7 +66,19 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findStudentsByFaculty_Id(facultyId));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countStudents() {
+        return ResponseEntity.ok(studentService.countStudents());
+    }
 
+    @GetMapping("/average-age")
+    public ResponseEntity<Integer> averageAgeOfStudents() {
+        return ResponseEntity.ok(studentService.averageAgeOfStudents());
+    }
 
+    @GetMapping("/limit-students")
+    public ResponseEntity<List<Student>> limitStudents() {
+        return ResponseEntity.ok(studentService.last5Students());
+    }
 }
 

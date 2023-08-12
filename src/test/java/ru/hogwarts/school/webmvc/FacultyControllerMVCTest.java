@@ -21,6 +21,7 @@ import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,18 +36,10 @@ public class FacultyControllerMVCTest {
     MockMvc mockMvc;
 
     @MockBean
-    StudentRepository studentRepository;
-    @MockBean
-    AvatarRepository avatarRepository;
-    @MockBean
     FacultyRepository facultyRepository;
 
     //Для использования базы без ее изменений
 
-    @SpyBean
-    StudentService studentService;
-    @SpyBean
-    AvatarService avatarService;
     @SpyBean
     FacultyService facultyService;
     //связь с логикой
@@ -112,6 +105,50 @@ public class FacultyControllerMVCTest {
 //                .andExpect(jsonPath("$[0].name").value(name))
 //                .andExpect(jsonPath("$[0].color").value(color));
 
+    }
+
+    @Test
+    public void filterFacultyByNameTest() throws Exception {
+        final Long id = 1L;
+        final String name = "Test";
+        final String color = "testColor";
+        Faculty faculty1 = new Faculty(id, name, color);
+        Faculty faculty2 = new Faculty(2L, "name", "color");
+        when(facultyRepository.findByNameIgnoreCase("Test")).thenReturn(List.of(faculty1));
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty/filter/name?name=Test")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value(name))
+                .andExpect(jsonPath("$[0].id").value(id));
+    }
+
+    @Test
+    public void filterFacultyByColorTest() {
+    }
+
+    @Test
+    public void getFacultyOfStudentTest() throws Exception {
+        final Long id = 1L;
+        final String name = "Test";
+        final String color = "testColor";
+        Faculty faculty1 = new Faculty(id, name, color);
+        Student student1 = new Student(1L, "Student1", 21);
+        student1.setFaculty(faculty1);
+        Student student2 = new Student(2L, "Student2", 22);
+        student2.setFaculty(faculty1);
+        when(facultyRepository.findByStudents_id(1L)).thenReturn(faculty1);
+        when(facultyRepository.findByStudents_id(2L)).thenReturn(faculty1);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty/getFacultyOfStudent?studentId=1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name));
+    }
+
+    @Test
+    public void filterFacultyTest() {
     }
 
     @Test
