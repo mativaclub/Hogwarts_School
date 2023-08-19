@@ -1,23 +1,72 @@
 //package ru.hogwarts.school.servicetest;
 //
-//import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.InjectMocks;
 //import org.mockito.Mock;
 //import org.mockito.junit.jupiter.MockitoExtension;
+//import org.springframework.mock.web.MockMultipartFile;
 //import ru.hogwarts.school.model.Avatar;
 //import ru.hogwarts.school.model.Student;
 //import ru.hogwarts.school.repository.AvatarRepository;
 //import ru.hogwarts.school.repository.StudentRepository;
 //import ru.hogwarts.school.service.AvatarService;
 //
-//import java.nio.file.Files;
-//import java.util.Optional;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStream;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.ArgumentMatchers.anyLong;
+//import static net.bytebuddy.matcher.ElementMatchers.any;
 //import static org.mockito.Mockito.when;
 //
+//@ExtendWith(MockitoExtension.class)
+//public class AvatarServiceTest {
+//
+//    @Mock
+//    private AvatarRepository avatarRepository;
+//
+//    @Mock
+//    private StudentRepository studentRepository;
+//
+//    @InjectMocks
+//    private AvatarService avatarService;
+//
+//
+//
+//    @Test
+//    public void uploadAvatarTest() {
+//        Student student = new Student(2L, "name", 20);
+//
+//        try (
+//                InputStream inputStream = new FileInputStream("test.png")
+//        ) {
+//            MockMultipartFile mockMultipartFile = new MockMultipartFile("name", inputStream);
+//            when(studentRepository.getReferenceById(2L)).thenReturn(student);
+////            when(avatarRepository.save(any(Avatar.class))).thenReturn()
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
+//
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //@ExtendWith(MockitoExtension.class)
 //class AvatarServiceTest {
 //
