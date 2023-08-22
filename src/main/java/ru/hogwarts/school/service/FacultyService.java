@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,45 +15,56 @@ import java.util.stream.Collectors;
 @Service
 public class FacultyService {
 
+    private final Logger logger = LoggerFactory.getLogger(FacultyService.class);
+
     @Autowired
     private FacultyRepository facultyRepository;
 
     public Faculty create(Faculty faculty) {
+        logger.info("Creating faculty");
         return facultyRepository.save(faculty);
     }
 
     public Optional<Faculty> read(long searchById) {
+        logger.info("searching by id faculty " + searchById);
         return facultyRepository.findById(searchById);
     }
 
     public Faculty update(Faculty faculty) {
+        logger.info("Updating faculty " + faculty);
         return facultyRepository.save(faculty);
     }
 
     public void delete(long deleteById) {
+        logger.warn("Deleting faculty with id " + deleteById);
         facultyRepository.deleteById(deleteById);
     }
 
 
     @GetMapping
     public Collection<Faculty> findFaculties() {
+        logger.info("Getting all faculties");
         return facultyRepository.findAll();
     }
 
     public Collection<Faculty> findByNameIgnoreCase(String name) {
+        logger.info("getting faculty by name");
         return facultyRepository.findByNameIgnoreCase(name);
     }
 
     public Collection<Faculty> findByColorIgnoreCase(String color) {
+        logger.info("getting faculty by color");
         return facultyRepository.findByColorIgnoreCase(color);
     }
 
     public Faculty getFacultyOfStudent(long studentId) {
+        logger.info("getting faculty by student id");
         return facultyRepository.findByStudents_id(studentId);
 
     }
 
     public Collection<Faculty> findByColorOrNameIgnoreCase(String color, String name) {
+        logger.info("getting faculty by color or name of student");
         return facultyRepository.findByColorOrNameIgnoreCase(color, name);
     }
 

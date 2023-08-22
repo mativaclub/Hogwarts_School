@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,9 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarService {
-
     private final StudentRepository studentRepository;
-
     private final AvatarRepository avatarRepository;
-
+    private final Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
     public AvatarService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
@@ -33,8 +33,9 @@ public class AvatarService {
     @Value("${path.to.avatars.folder}") //это ссылка на папку где аватары хранятся - в пропертис то есть path.to.avatars.folder
     private String avatarsDir; //она хранит значение пропертис - то есть /avatars
     public void uploadAvatar(Long studentId, MultipartFile avatar) throws IOException {
-        //MultipartFile комментарий в контроллере
+        logger.info("Avatar is uploaded");
 
+        //MultipartFile комментарий в контроллере
         //Path. Это интерфейс. В нем будем хранить путь до директории с загружаемыми файлами.
         //avatarsDir — это переменная, которая содержит значение из свойств.
 
@@ -60,6 +61,7 @@ public class AvatarService {
         }
         Avatar currentAvatarToDB = findAvatar(studentId); //if was present before and put it in DB
         if (currentAvatarToDB == null) {
+            logger.warn("Student is without avatar");
             currentAvatarToDB = new Avatar();
         }
         currentAvatarToDB.setStudent(student);
@@ -71,10 +73,13 @@ public class AvatarService {
     }
 
     public Avatar findAvatar(Long studentId) {
+        logger.info("Trying to find avatar to student with id " + studentId);
         Optional<Avatar> avatar = avatarRepository.findByStudentId(studentId);
         if (avatar.isPresent()) {
+            logger.info("Avatar has been found");
             return avatar.get();
         }
+        logger.error("Avatar was not found to student ID " + studentId);
         return null;
     }
 
@@ -83,6 +88,7 @@ public class AvatarService {
     }
 
     public List<Avatar> pagesOFAvatar(Integer page, Integer size) {
+        logger.info("Trying to find pages of avatar from " + page * size);
         PageRequest pageRequest = PageRequest.of(page, size);
         return avatarRepository.findAll(pageRequest).getContent();
     }
