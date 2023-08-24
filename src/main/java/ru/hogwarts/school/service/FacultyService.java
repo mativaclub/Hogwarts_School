@@ -68,10 +68,28 @@ public class FacultyService {
         return facultyRepository.findByColorOrNameIgnoreCase(color, name);
     }
 
+    public List<String> findLongestName() {
+        logger.info("find longest name");
+        int maxLength = facultyRepository.findAll()
+                .stream()
+                .parallel()
+                .mapToInt(el -> el.getName().length())
+                .max()
+                .orElse(0);
+        return facultyRepository.findAll()
+                .stream()
+                .parallel()
+                .filter(el->el.getName().length() == maxLength)
+                .toList()
+                .stream()
+                .parallel()
+                .map(el->el.getName())
+                .toList();
+//                .get(0)
+//                .getName();
+        //if need to return only one name, then using without List, only String
+    }
 }
-
-
-
 
 
 //    public Collection<Faculty> filterByColor(String color) {
@@ -80,23 +98,6 @@ public class FacultyService {
 //                .filter(el -> el.getColor().equals(color))
 //                .collect(Collectors.toList());
 //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    public Faculty updateName(long updateById, String updateName) {

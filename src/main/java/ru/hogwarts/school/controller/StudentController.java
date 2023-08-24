@@ -80,5 +80,21 @@ public class StudentController {
     public ResponseEntity<List<Student>> limitStudents() {
         return ResponseEntity.ok(studentService.last5Students());
     }
+
+
+    @GetMapping("/students-a")
+    public ResponseEntity<List<Student>> studentsA() {
+        return ResponseEntity.ok(studentService.studentsA());
+    }
+
+    @GetMapping("/averageAge")
+    public ResponseEntity<Double> averageAge() {
+        return ResponseEntity.ok(studentService.averageAge());
+    }
+
+    @GetMapping("/test-speed-stream")
+    public ResponseEntity<Integer> testSpeedStream() {
+        return ResponseEntity.ok(studentService.testSpeedStream());
+    }
 }
 

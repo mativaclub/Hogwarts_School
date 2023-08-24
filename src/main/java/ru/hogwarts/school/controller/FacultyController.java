@@ -76,5 +76,11 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.findByColorOrNameIgnoreCase(color, name));
     }
 
+    @GetMapping("/longestName")
+    public ResponseEntity<List<String>> findLongestName() {
+        return ResponseEntity.ok(facultyService.findLongestName());
+
+    }
+
 
 }
