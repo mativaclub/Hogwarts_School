@@ -68,23 +68,25 @@ public class FacultyService {
         return facultyRepository.findByColorOrNameIgnoreCase(color, name);
     }
 
-    public List<String> findLongestName() {
+    public String findLongestName() {
         logger.info("find longest name");
-        int maxLength = facultyRepository.findAll()
+//        int maxLength = facultyRepository.findAll()
+//                .stream()
+//                .parallel()
+//                .mapToInt(el -> el.getName().length())
+//                .max()
+//                .orElse(0);
+        Optional<Faculty> result = facultyRepository.findAll()
                 .stream()
                 .parallel()
-                .mapToInt(el -> el.getName().length())
-                .max()
-                .orElse(0);
-        return facultyRepository.findAll()
-                .stream()
-                .parallel()
-                .filter(el->el.getName().length() == maxLength)
-                .toList()
-                .stream()
-                .parallel()
-                .map(el->el.getName())
-                .toList();
+                .max(Comparator.comparingInt(el -> el.getName().length()));
+        if (result.isPresent()) {
+            return result.get().getName();
+        }
+        return "";
+
+//                .max((el1, el2) -> el1.getName().length() - el2.getName().length())
+//                .filter(el->el.getName().length() == maxLength)
 //                .get(0)
 //                .getName();
         //if need to return only one name, then using without List, only String

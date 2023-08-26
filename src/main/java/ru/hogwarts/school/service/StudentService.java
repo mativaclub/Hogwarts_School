@@ -10,6 +10,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Service
@@ -97,15 +98,23 @@ public class StudentService {
         return studentRepository.last5Students();
     }
 
-    public List<Student> studentsA() {
+    public List<String> studentsA() {
         logger.info("Getting students name starting with A");
+//        return studentRepository.findAll()
+//                .stream()
+//                .parallel()
+//                .filter(el->el.getName().toUpperCase().startsWith("A"))
+//                .sorted(Comparator.comparing(Student::getName))
+//                .peek(el->el.setName(el.getName().toUpperCase()))
+//                .toList();
         return studentRepository.findAll()
                 .stream()
                 .parallel()
-                .filter(el->el.getName().toUpperCase().startsWith("A"))
-                .sorted(Comparator.comparing(Student::getName))
-                .peek(el->el.setName(el.getName().toUpperCase()))
+                .map(el -> el.getName().toUpperCase())
+                .filter(el -> el.startsWith("A"))
+                .sorted()
                 .toList();
+
     }
 
     public Double averageAge() {
@@ -120,8 +129,15 @@ public class StudentService {
 
     public Integer testSpeedStream() {
         int sum = Stream.iterate(1, a -> a +1)
-                .limit(10_000_000)
+                .limit(100_000_000)
                 .parallel()
+                .reduce(0, (a, b) -> a + b );
+        return sum;
+    }
+
+    public Integer testSpeedStream2() {
+        int sum = IntStream.iterate(1, a -> a +1)
+                .limit(100_000_000)
                 .reduce(0, (a, b) -> a + b );
         return sum;
     }

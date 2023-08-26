@@ -83,7 +83,7 @@ public class StudentController {
 
 
     @GetMapping("/students-a")
-    public ResponseEntity<List<Student>> studentsA() {
+    public ResponseEntity<List<String>> studentsA() {
         return ResponseEntity.ok(studentService.studentsA());
     }
 
@@ -95,6 +95,11 @@ public class StudentController {
     @GetMapping("/test-speed-stream")
     public ResponseEntity<Integer> testSpeedStream() {
         return ResponseEntity.ok(studentService.testSpeedStream());
+    }
+
+    @GetMapping("/test-speed-stream-2")
+    public ResponseEntity<Integer> testSpeedStream2() {
+        return ResponseEntity.ok(studentService.testSpeedStream2());
     }
 }
 
