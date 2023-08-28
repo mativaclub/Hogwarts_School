@@ -128,17 +128,69 @@ public class StudentService {
     }
 
     public Integer testSpeedStream() {
-        int sum = Stream.iterate(1, a -> a +1)
+        int sum = Stream.iterate(1, a -> a + 1)
                 .limit(100_000_000)
                 .parallel()
-                .reduce(0, (a, b) -> a + b );
+                .reduce(0, (a, b) -> a + b);
         return sum;
     }
 
     public Integer testSpeedStream2() {
-        int sum = IntStream.iterate(1, a -> a +1)
+        int sum = IntStream.iterate(1, a -> a + 1)
                 .limit(100_000_000)
-                .reduce(0, (a, b) -> a + b );
+                .reduce(0, (a, b) -> a + b);
         return sum;
+    }
+
+    public List<Student> listOfStudents() {
+        List<Student> studentList = studentRepository.findAll();
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(studentList.get(0).getName());
+                System.out.println(studentList.get(1).getName());
+            }
+        });
+
+        Thread thread2 = new Thread(() -> {
+            System.out.println(studentList.get(2).getName());
+            System.out.println(studentList.get(3).getName());
+        });
+
+        Thread thread3 = new Thread(() -> {
+            System.out.println(studentList.get(5).getName());
+            System.out.println(studentList.get(6).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+
+        return studentList;
+    }
+
+
+    public List<Student> listOfStudentsSync() {
+        List<Student> listOfStudentsSync = studentRepository.findAll();
+        sync(listOfStudentsSync);
+        return listOfStudentsSync;
+    }
+
+    public synchronized void sync(List<Student> students) {
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        Thread thread2 = new Thread(() -> {
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        });
+        Thread thread3 = new Thread(() -> {
+            System.out.println(students.get(3).getName());
+            System.out.println(students.get(4).getName());
+
+        });
+        thread2.start();
+        thread3.start();
+
     }
 }

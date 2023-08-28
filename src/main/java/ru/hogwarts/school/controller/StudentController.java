@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import liquibase.pro.packaged.R;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -101,5 +102,16 @@ public class StudentController {
     public ResponseEntity<Integer> testSpeedStream2() {
         return ResponseEntity.ok(studentService.testSpeedStream2());
     }
+
+    @GetMapping("/list-of-students")
+    public ResponseEntity<List<Student>> listOfStudents() {
+        return ResponseEntity.ok(studentService.listOfStudents());
+    }
+
+    @GetMapping("/list-of-students-sync")
+    public ResponseEntity<List<Student>> listOfStudentsSync() {
+        return ResponseEntity.ok(studentService.listOfStudentsSync());
+    }
+
 }
 
