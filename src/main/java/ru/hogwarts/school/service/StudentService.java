@@ -144,13 +144,9 @@ public class StudentService {
 
     public List<Student> listOfStudents() {
         List<Student> studentList = studentRepository.findAll();
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(studentList.get(0).getName());
-                System.out.println(studentList.get(1).getName());
-            }
-        });
+
+        System.out.println(studentList.get(0).getName());
+        System.out.println(studentList.get(1).getName());
 
         Thread thread2 = new Thread(() -> {
             System.out.println(studentList.get(2).getName());
@@ -161,8 +157,6 @@ public class StudentService {
             System.out.println(studentList.get(5).getName());
             System.out.println(studentList.get(6).getName());
         });
-
-        thread1.start();
         thread2.start();
         thread3.start();
 
