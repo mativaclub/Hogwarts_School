@@ -166,25 +166,24 @@ public class StudentService {
 
     public List<Student> listOfStudentsSync() {
         List<Student> listOfStudentsSync = studentRepository.findAll();
-        sync(listOfStudentsSync);
-        return listOfStudentsSync;
-    }
-
-    public synchronized void sync(List<Student> students) {
-        System.out.println(students.get(0).getName());
-        System.out.println(students.get(1).getName());
+        printSync(listOfStudentsSync, 0);
+        printSync(listOfStudentsSync, 1);
 
         Thread thread2 = new Thread(() -> {
-            System.out.println(students.get(2).getName());
-            System.out.println(students.get(3).getName());
+            printSync(listOfStudentsSync, 2);
+            printSync(listOfStudentsSync, 3);
         });
         Thread thread3 = new Thread(() -> {
-            System.out.println(students.get(3).getName());
-            System.out.println(students.get(4).getName());
+            printSync(listOfStudentsSync, 3);
+            printSync(listOfStudentsSync, 4);
 
         });
         thread2.start();
         thread3.start();
+        return listOfStudentsSync;
+    }
 
+    public synchronized void printSync(List<Student> students, int index) {
+        System.out.println(students.get(index).getName());
     }
 }
