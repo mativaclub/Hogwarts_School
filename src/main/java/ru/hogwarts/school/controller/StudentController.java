@@ -1,15 +1,15 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.HttpStatus;
+import liquibase.pro.packaged.R;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/student")
@@ -23,7 +23,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public Student getById(@PathVariable long id) {
-        return studentService.read(id);
+        return studentService.read(id).orElse(null);
     }
 
     @PostMapping()
@@ -32,40 +32,86 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public Student update(@RequestBody() Student student, @PathVariable long id) {
+    public Student update(@RequestBody() Student student, @PathVariable Long id) {
         student.setId(id);
         return studentService.update(student);
     }
 
     @DeleteMapping("/{id}")
-    public Student delete(@PathVariable long id) {
-        return studentService.delete(id);
+    public ResponseEntity delete(@PathVariable Long id) {
+        studentService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 
-    @GetMapping("/filter")
-    public Map<Long, Student> filterByAge(@RequestParam("age") int age) {
-        return studentService.filterByAge(age);
+    @GetMapping("/filterByAge")
+    public ResponseEntity<Collection<Student>> filterByAge(@RequestParam("age") int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.filterByAge(age));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/filterBetween")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam("from") int fromAge,
+                                                                @RequestParam("to") int toAge) {
+        if (fromAge > 0 && toAge > 0 && fromAge <= toAge) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(fromAge, toAge));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/filterByFaculty")
+    public ResponseEntity<Collection<Student>> filterStudentsByFaculty(
+            @RequestParam("facultyId") long facultyId) {
+        return ResponseEntity.ok(studentService.findStudentsByFaculty_Id(facultyId));
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countStudents() {
+        return ResponseEntity.ok(studentService.countStudents());
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Integer> averageAgeOfStudents() {
+        return ResponseEntity.ok(studentService.averageAgeOfStudents());
+    }
+
+    @GetMapping("/limit-students")
+    public ResponseEntity<List<Student>> limitStudents() {
+        return ResponseEntity.ok(studentService.last5Students());
     }
 
 
+    @GetMapping("/students-a")
+    public ResponseEntity<List<String>> studentsA() {
+        return ResponseEntity.ok(studentService.studentsA());
+    }
 
-//    @GetMapping
-//    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
-//        if (age > 0) {
-//            return ResponseEntity.ok(studentService.findByAge(age));
-//        }
-//        return ResponseEntity.ok(Collections.emptyList());
-//    }
-//
-//
-//    public Collection<Student> findByAge(int age) {
-//        ArrayList<Student> result = new ArrayList<>();
-//        for (Student student : students.values()) {
-//            if (student.getAge() == age) {
-//                result.add(student);
-//            }
-//        }
-//        return result;
-//    }
+    @GetMapping("/averageAge")
+    public ResponseEntity<Double> averageAge() {
+        return ResponseEntity.ok(studentService.averageAge());
+    }
+
+    @GetMapping("/test-speed-stream")
+    public ResponseEntity<Integer> testSpeedStream() {
+        return ResponseEntity.ok(studentService.testSpeedStream());
+    }
+
+    @GetMapping("/test-speed-stream-2")
+    public ResponseEntity<Integer> testSpeedStream2() {
+        return ResponseEntity.ok(studentService.testSpeedStream2());
+    }
+
+    @GetMapping("/list-of-students")
+    public ResponseEntity<List<Student>> listOfStudents() {
+        return ResponseEntity.ok(studentService.listOfStudents());
+    }
+
+    @GetMapping("/list-of-students-sync")
+    public ResponseEntity<List<Student>> listOfStudentsSync() {
+        return ResponseEntity.ok(studentService.listOfStudentsSync());
+    }
+
 }
+

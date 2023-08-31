@@ -1,9 +1,9 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.*;
@@ -19,7 +19,7 @@ public class FacultyController {
     }
 
     @GetMapping("/{id}")
-    public Faculty getById(@PathVariable long id) {
+    public Optional<Faculty> getById(@PathVariable long id) {
         return facultyService.read(id);
     }
 
@@ -35,46 +35,52 @@ public class FacultyController {
     }
 
     @DeleteMapping("/{id}")
-    public Faculty delete(@PathVariable long id) {
-        return facultyService.delete(id);
+    public ResponseEntity delete(@PathVariable long id) {
+        facultyService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
+
+//    @GetMapping("/filter")
+//    public Collection<Faculty> filterByColor(@RequestParam("color") String color) {
+//        return facultyService.filterByColor(color);
+//    }
+
+    @GetMapping("/filter/name")
+    public ResponseEntity<Collection<Faculty>> findByNameIgnoreCase(
+            @RequestParam("name") String name) {
+        if (!name.isEmpty()) {
+            return ResponseEntity.ok(facultyService.findByNameIgnoreCase(name));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/filter/color")
+    public ResponseEntity<Collection<Faculty>> findByColorIgnoreCase(
+            @RequestParam("color") String color) {
+        if (!color.isEmpty()) {
+            return ResponseEntity.ok(facultyService.findByColorIgnoreCase(color));
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/getFacultyOfStudent")
+    public ResponseEntity<Faculty> getFacultyOfStudent(@RequestParam("studentId") long studentId) {
+        return ResponseEntity.ok(facultyService.getFacultyOfStudent(studentId));
+    }
 
     @GetMapping("/filter")
-    public Map<Long, Faculty> filterByColor(@RequestParam("color") String color) {
-        return facultyService.filterByColor(color);
+    public ResponseEntity<Collection<Faculty>> findByColorOrNameIgnoreCase(
+            @RequestParam("color") String color,
+            @RequestParam("name") String name) {
+        return ResponseEntity.ok(facultyService.findByColorOrNameIgnoreCase(color, name));
     }
 
+    @GetMapping("/longestName")
+    public ResponseEntity<String> findLongestName() {
+        return ResponseEntity.ok(facultyService.findLongestName());
 
+    }
 
-//    @GetMapping("{id}")
-//    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
-//        Faculty faculty = facultyService.read(id);
-//        if (faculty == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(faculty);
-//    }
-
-
-//    @GetMapping
-//    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
-//        if (color != null && !color.isBlank()) {
-//            return ResponseEntity.ok(facultyService.findByColor(color));
-//        }
-//        return ResponseEntity.ok(Collections.emptyList());
-//    }
-//
-//    // Service
-//    public Collection<Faculty>
-//    findByColor(String color) {
-//        ArrayList<Faculty> result = new ArrayList<>();
-//        for (Faculty faculty : faculties.values()) {
-//            if (Objects.equals(faculty.getColor(), color)) {
-//                result.add(faculty);
-//            }
-//        }
-//        return result;
-//    }
 
 }
